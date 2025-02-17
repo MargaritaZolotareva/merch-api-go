@@ -6,22 +6,27 @@ import (
 	"merch-api/model"
 )
 
+type InventoryItem struct {
+	Type     string `json:"type"`
+	Quantity int    `json:"quantity"`
+}
+type ReceivedCoinsItem struct {
+	FromUser string `json:"fromUser" gorm:"column:fromUser"`
+	Amount   int    `json:"amount"`
+}
+type SentCoinsItem struct {
+	ToUser string `json:"toUser" gorm:"column:toUser"`
+	Amount int    `json:"amount"`
+}
+type CoinHistoryItem struct {
+	Received []ReceivedCoinsItem `json:"received"`
+	Sent     []SentCoinsItem     `json:"sent"`
+}
+
 type UserInfo struct {
-	Coins     int `json:"coins"`
-	Inventory []struct {
-		Type     string `json:"type"`
-		Quantity int    `json:"quantity"`
-	} `json:"inventory"`
-	CoinHistory struct {
-		Received []struct {
-			FromUser string `json:"fromUser" gorm:"column:fromUser"`
-			Amount   int    `json:"amount"`
-		} `json:"received"`
-		Sent []struct {
-			ToUser string `json:"toUser" gorm:"column:toUser"`
-			Amount int    `json:"amount"`
-		} `json:"sent"`
-	} `json:"coinHistory"`
+	Coins       int             `json:"coins"`
+	Inventory   []InventoryItem `json:"inventory"`
+	CoinHistory CoinHistoryItem `json:"coinHistory"`
 }
 
 type UserInfoService interface {

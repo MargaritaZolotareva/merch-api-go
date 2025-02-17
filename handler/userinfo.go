@@ -32,13 +32,13 @@ func (h *UserInfoHandler) InfoHandler(c *gin.Context) {
 
 	db, exists := c.Get("db")
 	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": "Database not available"})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": "БД недоступна"})
 		return
 	}
 
 	gdb, ok := db.(*gorm.DB)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": "Invalid database connection"})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": "Кривое подключение к БД"})
 		return
 	}
 

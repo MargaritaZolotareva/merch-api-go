@@ -2,12 +2,11 @@ package middleware
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"os"
 	"strings"
-
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
 )
 
 var JWTSecretKey = []byte(os.Getenv("JWT_SECRET_KEY"))

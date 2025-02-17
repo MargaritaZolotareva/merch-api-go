@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"merch-api/handler"
+	handler2 "merch-api/handler"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -43,7 +43,7 @@ func TestBuyItemHandler(t *testing.T) {
 	c.Set("db", gdb)
 	c.Params = append(c.Params, gin.Param{Key: "item", Value: "item1"})
 
-	pHandler := handler.NewPurchaseHandler(mockService)
+	pHandler := handler2.NewPurchaseHandler(mockService)
 	pHandler.BuyItem(c)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -60,7 +60,7 @@ func TestBuyItemHandler_UserNotAuthenticated(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
-	pHandler := handler.NewPurchaseHandler(mockService)
+	pHandler := handler2.NewPurchaseHandler(mockService)
 	pHandler.BuyItem(c)
 
 	assert.Equal(t, http.StatusUnauthorized, w.Code)
@@ -75,7 +75,7 @@ func TestBuyItemHandler_InvalidUsername(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	c.Set("username", 3.14)
 
-	pHandler := handler.NewPurchaseHandler(mockService)
+	pHandler := handler2.NewPurchaseHandler(mockService)
 	pHandler.BuyItem(c)
 
 	assert.Equal(t, http.StatusUnauthorized, w.Code)
@@ -90,7 +90,7 @@ func TestBuyItemHandler_DatabaseError(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	c.Set("username", "testuser")
 
-	pHandler := handler.NewPurchaseHandler(mockService)
+	pHandler := handler2.NewPurchaseHandler(mockService)
 	pHandler.BuyItem(c)
 
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
@@ -114,7 +114,7 @@ func TestBuyItemHandler_WrongDatabaseConnection(t *testing.T) {
 	defer db.Close()
 	c.Set("db", db)
 
-	pHandler := handler.NewPurchaseHandler(mockService)
+	pHandler := handler2.NewPurchaseHandler(mockService)
 	pHandler.BuyItem(c)
 
 	assert.Equal(t, http.StatusInternalServerError, w.Code)

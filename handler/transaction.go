@@ -17,6 +17,11 @@ func NewTransactionHandler(svc service.TransactionService) *TransactionHandler {
 	}
 }
 
+type TransactionInput struct {
+	ToUser string `json:"toUser" binding:"required"`
+	Amount int    `json:"amount" binding:"required"`
+}
+
 func (h *TransactionHandler) SendCoin(c *gin.Context) {
 	fromUsername, exists := c.Get("username")
 	if !exists {
@@ -29,11 +34,7 @@ func (h *TransactionHandler) SendCoin(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"errors": "Некорректный username"})
 		return
 	}
-
-	var input struct {
-		ToUser string `json:"toUser"`
-		Amount int    `json:"amount"`
-	}
+	var input TransactionInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errors": "Неверный запрос"})
@@ -46,13 +47,13 @@ func (h *TransactionHandler) SendCoin(c *gin.Context) {
 
 	db, exists := c.Get("db")
 	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": "Database not available"})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": "БД недоступна"})
 		return
 	}
 
 	gdb, ok := db.(*gorm.DB)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": "Invalid database connection"})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": "Кривое подключение к БД"})
 		return
 	}
 
